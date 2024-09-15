@@ -1,13 +1,23 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AdminLoginApi }  from "../../../Api/AdminApis/adminapi";
+import { toast } from "react-hot-toast";
+
+
 
 export const AdminAuthLogin = createAsyncThunk("AdminLogin", async (data) => {
-  try {
+  try{
     const response = await AdminLoginApi(data);
-    return response.data;
-  } catch (error) {
+
+    if(response.status == 200){
+        toast.success("Admin Login Succesfully Done!")
+        localStorage.setItem("admintoken",response.data.token);
+        return response.data
+    }else{
+        toast.error(response.response.data.error);
+    }
+} catch (error) {
     throw error;
-  }
+}
 });
 
 // crreate reducer and action

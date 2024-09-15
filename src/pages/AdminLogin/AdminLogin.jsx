@@ -1,12 +1,48 @@
 import React, { useState } from 'react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast';
+import { AdminAuthLogin } from '../../redux/slice/adminAuthSlice/AdminSlice';
+import { useDispatch } from 'react-redux';
 // import "./commonsignStyle.scss";
 
 const AdminLogin = () => {
     const [passShow, setPassShow] = useState(false);
 
-    const handleChange = ()=>{}
-    const handleSubmit = ()=>{}
+    const [inpvalue, setInputValue] = useState({
+        email: "",
+        password: ""
+    });
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    
+
+    const handleChange = (e)=>{
+        const { name, value } = e.target;
+
+        setInputValue({ ...inpvalue, [name]: value })
+    }
+    const handleSubmit = (e)=>{
+        e.preventDefault();
+
+        const { email, password } = inpvalue;
+
+        if (email == "") {
+            toast.error("Email is Required!")
+        }else if(!email.includes("@")){
+            toast.error("Enter Your Valid Email !")
+        }else if(password == ""){
+            toast.error("password is Required!")
+        }else{
+            dispatch(AdminAuthLogin(inpvalue)).then((res)=>{
+                if(res.payload.token){
+                    navigate("/admin/dashboard")
+                }
+            }).catch((error)=>{
+                console.log("error",error)
+            })  
+        }
+    }
 
     return (
         <>
@@ -17,20 +53,23 @@ const AdminLogin = () => {
                     </div>
 
                     <form>
-                        <div className="form_input">
+                    <div className="form_input">
                             <label htmlFor="email">Email</label>
-                            <input type="email" value="" name="email" onChange={handleChange} id="email" placeholder='Enter Your Email Address' />
+                            <input type="email" name="email" id="email" onChange={handleChange} placeholder='Enter Your Email Address' />
                         </div>
+
+
+                      
                         <div className="form_input">
                             <label htmlFor="password">Password</label>
                             <div className="two">
-                                <input type={!passShow ? "password" : "text"} value='' onChange={handleChange} name="password" placeholder='Enter Your password' />
+                                <input type={!passShow ? "password" : "text"} onChange={handleChange} name="password" placeholder='Enter Your password' id="" />
                                 <div className="showpass" onClick={() => setPassShow(!passShow)}>
                                     {!passShow ? "Show" : "Hide"}
                                 </div>
                             </div>
                         </div>
-
+                        
                         <button className='btn' onClick={handleSubmit}>Login</button>
                         <p>Don't have an Account? <NavLink to="/register">Sign Up</NavLink> </p>
                         <p style={{ color: "black", fontWeight: "bold" }}>Forgot Password  <NavLink to="/forgotpassword">Click Here</NavLink> </p>
