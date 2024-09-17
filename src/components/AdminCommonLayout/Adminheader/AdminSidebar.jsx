@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const AdminSidebar = ({ children }) => {
   const { adminLoggedINData } = useSelector((state) => state.Admin);
-  console.log("adminLoggedINData", adminLoggedINData);
+  
 
   const [isSidebarActive, setSidebarActive] = useState(false);
   const dispatch = useDispatch();

@@ -1,15 +1,41 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Form from 'react-bootstrap/Form';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from 'react-select'
+import { getCategory } from '../../redux/slice/product/ProductSlice';
 // import { useDispatch, useSelector } from 'react-redux';
 // import { AddProductscall, getCategory } from '../../redux/slice/productSlice/ProductSlice';
 // import toast from 'react-hot-toast';
 
 const AddProducts = () => {
+    const dispatch = useDispatch()
 
-  const categorystate = [
+    const {CategoryData} = useSelector((state)=>state.Product);
+    const [categorystate,setCategoryState] = useState([]);
+
+ 
+
+  useEffect(() => {
+    dispatch(getCategory())
+  }, [])
+
     
-  ]
+
+  useEffect(()=>{
+    dispatch(getCategory())
+},[])
+
+useEffect(()=>{
+    let arr = [];
+
+    for(let i = 0;i<CategoryData.length;i++){
+        let setcategoryvalue = {value:CategoryData[i]._id,label:CategoryData[i].categoryname};
+        arr.push(setcategoryvalue)
+    }
+
+    setCategoryState(arr)
+    
+},[CategoryData])
 
   return (
     <>
