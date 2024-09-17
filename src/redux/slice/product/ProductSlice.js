@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddCategoryApi, GetCategoryApi } from "../../../Api/ProductApis/Productapi";
+import { AddCategoryApi, AddProductsApi, GetCategoryApi } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
 
 
@@ -43,6 +43,25 @@ export const getCategory = createAsyncThunk("getCategory",async(thunkApi)=>{
 });
 
 
+// Add Product Slice
+export const AddProductsslice = createAsyncThunk("AddProducts",async(data)=>{
+  try {
+      const response = await AddProductsApi(data.data,data.categoryId,data.config);
+
+      if(response.status == 200){
+          toast.success("Product Added")
+          return response.data
+      }else{
+          toast.error(response.response.data.error);
+         
+      }
+  } catch (error) {
+      throw error;
+  }
+});
+
+
+
 
 
 
@@ -52,6 +71,7 @@ export const ProductSlice = createSlice({
   initialState: {
     addCategoryData: [],
     CategoryData:[],
+    AddProducts:[],
     loading: false,
     error: null,
   },
@@ -79,6 +99,19 @@ export const ProductSlice = createSlice({
             state.CategoryData = action.payload;
         })
         .addCase(getCategory.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+          // AddProductsslice
+          .addCase(AddProductsslice.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(AddProductsslice.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.AddProducts = action.payload;
+        })
+        .addCase(AddProductsslice.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })

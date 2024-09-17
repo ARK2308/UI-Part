@@ -11,3 +11,8 @@ export const AddCategoryApi = async(data,header)=>{
 export const GetCategoryApi = async(data,header)=>{
     return await commonrequest("GET",`${BASE_URL}/product/api/getcategory`,"",header,"admin");
 }
+
+// AddProductsApi api
+export const AddProductsApi = async(data,categoryId,header)=>{
+    return await commonrequest("POST",`${BASE_URL}/product/api/addProduct?categoryid=${categoryId}`,data,header,"admin");
+}
