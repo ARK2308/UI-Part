@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { registerApi } from "../../../Api/UserApis/userApi";
+import { loginApi, registerApi } from "../../../Api/UserApis/userApi";
 
 
 
@@ -12,6 +12,27 @@ export const UserRegister = createAsyncThunk("UserRegister",async(data)=>{
 
         if(response.status == 200){
             toast.success("User Succesfully Registerd!")
+            
+            return response.data
+        }else{
+            toast.error(response.response.data.error);
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+
+// userlogin  Slice
+export const userlogin = createAsyncThunk("userlogin",async(data)=>{
+    try {
+        const response = await loginApi(data);
+        
+
+        if(response.status == 200){
+            localStorage.setItem("usertoken",response.data.token);
+            toast.success("User Succesfully Login!")
             
             return response.data
         }else{
@@ -37,12 +58,12 @@ export const UserRegister = createAsyncThunk("UserRegister",async(data)=>{
 
 
 
-
 // create reducer and action
 export const UserSlice = createSlice({
     name:"UserSlice",
     initialState:{
         getAlluserData:[],
+        loginuser:[],
         loading:false,
         error:null
     },
@@ -56,6 +77,19 @@ export const UserSlice = createSlice({
             state.registeruser = action.payload;
         })
         .addCase(UserRegister.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+           // user login
+           .addCase(userlogin.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(userlogin.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.loginuser = action.payload;
+        })
+        .addCase(userlogin.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
