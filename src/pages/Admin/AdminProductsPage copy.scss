@@ -1,0 +1,11 @@
+.image-container {
+    width: 100%;
+    height: 100%; /* Ensures the container takes full height of its parent */
+    overflow: hidden; /* Ensures no overflow outside the div */
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the entire container */
+}

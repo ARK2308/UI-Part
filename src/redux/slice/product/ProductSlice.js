@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddCategoryApi, AddProductsApi, GetCategoryApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
+import { AddCategoryApi, AddProductsApi, DeleteProductApi, GetCategoryApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
 
 
@@ -78,6 +78,22 @@ export const getAllProducts = createAsyncThunk("getAllProducts",async(data)=>{
   }
 });
 
+export const deleteProduct = createAsyncThunk("deleteProduct",async(data)=>{
+  try {
+      const response = await DeleteProductApi(data);
+
+      if(response.status == 200){
+          toast.success("Product Delete Sucessfully");
+          return response.data
+      }else{
+          toast.error("Error");
+         
+      }
+  } catch (error) {
+      throw error;
+  }
+});
+
 
 
 
@@ -91,6 +107,7 @@ export const ProductSlice = createSlice({
     CategoryData:[],
     AddProducts:[],
     ProductsData:[],
+    DeleteProducts:[],
     loading: false,
     error: null,
   },
@@ -146,6 +163,19 @@ export const ProductSlice = createSlice({
           state.loading = false;
           state.error = action.payload;
       })
+
+      // deleteProduct slice
+      .addCase(deleteProduct.pending,(state)=>{
+        state.loading = true;
+    })
+    .addCase(deleteProduct.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.DeleteProducts = [action.payload];
+    })
+    .addCase(deleteProduct.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+    })
 
   },
 });
