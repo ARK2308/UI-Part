@@ -10,3 +10,9 @@ export const registerApi = async(data,header)=>{
 export const loginApi = async(data,header)=>{
     return await commonrequest("POST",`${BASE_URL}/userAuth/api/login`,data,header,"user");
 }
+
+
+// user veryfy api
+export const userLoggedInApi = async(data,header)=>{
+    return await commonrequest("GET",`${BASE_URL}/userAuth/api/userloggedin`,"",header,"user");
+}

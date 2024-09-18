@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { loginApi, registerApi } from "../../../Api/UserApis/userApi";
+import { loginApi, registerApi, userLoggedInApi } from "../../../Api/UserApis/userApi";
 
 
 
@@ -43,6 +43,24 @@ export const userlogin = createAsyncThunk("userlogin",async(data)=>{
     }
 });
 
+// userVerify  Slice
+export const userVerify = createAsyncThunk("userVerify",async(thunkApi)=>{
+    try {
+        const response = await userLoggedInApi();
+        console.log("response",response);
+        
+
+        if(response.status == 200){
+            
+            return response.data
+        }else{
+            return thunkApi.rejecWithValue("error")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
 
 
 
@@ -64,6 +82,7 @@ export const UserSlice = createSlice({
     initialState:{
         getAlluserData:[],
         loginuser:[],
+        UserLoggedIn:[],
         loading:false,
         error:null
     },
@@ -90,6 +109,19 @@ export const UserSlice = createSlice({
             state.loginuser = action.payload;
         })
         .addCase(userlogin.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        // user verify Api
+        .addCase(userVerify.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(userVerify.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.UserLoggedIn = [action.payload];
+        })
+        .addCase(userVerify.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
