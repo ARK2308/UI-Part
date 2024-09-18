@@ -1,111 +1,97 @@
-import React from 'react'
-// import { useDispatch, useSelector } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-// import { getAllProducts } from '../../redux/slice/productSlice/ProductSlice';
-// import Paginations from '../../component/Pagination/Paginations';
+import React, { useEffect, useState } from 'react'
 import { Button } from 'react-bootstrap';
-// import { deleteProduct } from '../../redux/slice/adminAuthSlice/AdminSlice';
+import { useDispatch, useSelector } from "react-redux"
+import {  getAllProducts } from '../../redux/slice/product/ProductSlice';
+import Paginations from '../../components/Pagination/Paginations';
 
 const AdminProductspage = () => {
-    // const { products } = useSelector((state) => state.Products);
-    // const  {deleteproductsStore} = useSelector((state) => state.Admin);
-    // console.log("productsdelete",deleteproductsStore)
-    
 
-    // const dispatch = useDispatch()
-
-    // const [page, setPage] = useState(1);
-    // const [pageCount, setPageCount] = useState(0);
-
-    // const [productDelete,setProductDelete] = useState(false);
-
-    // const productApi = () => {
-
-    //     const data = {
-    //         selectedcategory: "all",
-    //         page
-    //     }
-
-    //     dispatch(getAllProducts(data)).then((res) => {
-    //         setPageCount(res.payload.Pagination.pageCount)
-    //     }).catch((err) => {
-    //         console.log("err", err)
-    //     })
-    // }
-
-    // const handleDeleteProducts = (id) => {
-    //     console.log(id)
-    //     const data = {
-    //         productid: id
-    //     }
-
-    //     dispatch(deleteProduct(data))
-    // }
+    const { ProductsData } = useSelector((state) => state.Product);
+    const  {DeleteProducts} = useSelector((state) => state.Product);
+    // console.log("ProductsDelete", DeleteProducts)
 
 
-    // // pagination
-    // // handle prev btn
-    // const handlePrevious = () => {
-    //     setPage(() => {
-    //         if (page === 1) return page;
-    //         return page - 1
-    //     })
-    // }
+    const [page, setPage] = useState(1);
+    const [pageCount, setPageCount] = useState(0);
 
-    // // handle next btn
-    // const handleNext = () => {
-    //     setPage(() => {
-    //         if (page === pageCount) return page;
-    //         return page + 1
-    //     })
-    // }
+    const dispatch = useDispatch();
 
-    // useEffect(() => {
-    //     productApi()
-    // }, [page,deleteproductsStore])
+    const productApi = () => {
+        const data = {
+            selectedcategory: "all",
+            page
+        }
 
+        dispatch(getAllProducts(data)).then((res) => {
+
+            setPageCount(res.payload.Pagination.pageCount)
+        }).catch((err) => {
+            console.log("error", err)
+        })
+    }
+
+    // pagination
+    // handle next btn
+    const handleNext = () => {
+        setPage(() => {
+            if (page === pageCount) return page;
+            return page + 1;
+        })
+    }
+
+    // handle prev btn
+    const handlePrevios = () => {
+        setPage(() => {
+            if (page === 1) return page;
+            return page - 1;
+        })
+    }
+
+    // product delete
+    useEffect(() => {
+        productApi()
+    }, [page])
     return (
         <>
-            <section id="sellers">
-                <div class="seller containers">
+            <section id='sellers'>
+                <div className="seller containers">
                     <div className='d-flex justify-content-between align-items-center'>
                         <h2>Products</h2>
 
-
                     </div>
-
-                    <div class="best-seller">
-                        {/* {
-                            products?.getAllproducts?.map((element, index) => {
+                    <div className="best-seller">
+                        {
+                            ProductsData?.getAllProducts?.map((element, index) => {
                                 return (
-                                    <> */}
+                                    <>
                                         <div className="best-p1 mb-5">
-                                            <img src='element.productimage' alt="img" />
+                                            <img src={element.productimage} width="100%" alt="" />
                                             <div className="best-p1-txt">
                                                 <div className="name-of-p">
-                                                    <p>element.productname</p>
+                                                    <p>{element.productname}</p>
                                                 </div>
-                                              
                                                 <div className="price">
-                                                    $ element.price
-                                                    <Button variant='none'> <i class="fa-solid fa-trash" style={{ color: "red" }}></i></Button>
+                                                    ₹  {element.price}
+                                                    <Button variant='none' >
+                                                        <i className='fa-solid fa-trash' style={{ color: "red" }}></i>
+                                                    </Button>
                                                 </div>
-                                              
+
                                             </div>
                                         </div>
-                                    {/* </>
+                                    </>
                                 )
                             })
-                        } */}
+                        }
 
                     </div>
-                    {/* <Paginations
-                        handlePrevious={handlePrevious}
-                        handleNext={handleNext}
-                        page={page}
+                    <Paginations
                         pageCount={pageCount}
+                        page={page}
+                        handleNext={handleNext}
+                        handlePrevios={handlePrevios}
                         setPage={setPage}
-                    /> */}
+                    />
                 </div>
             </section>
         </>

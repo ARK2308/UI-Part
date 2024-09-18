@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddCategoryApi, AddProductsApi, GetCategoryApi } from "../../../Api/ProductApis/Productapi";
+import { AddCategoryApi, AddProductsApi, GetCategoryApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
 
 
@@ -62,6 +62,24 @@ export const AddProductsslice = createAsyncThunk("AddProducts",async(data)=>{
 
 
 
+// get Product Slice
+export const getAllProducts = createAsyncThunk("getAllProducts",async(data)=>{
+  try {
+      const response = await GetProductsApi(data);
+
+      if(response.status == 200){
+          return response.data
+      }else{
+          toast.error(response.response.data.error);
+         
+      }
+  } catch (error) {
+      throw error;
+  }
+});
+
+
+
 
 
 
@@ -72,6 +90,7 @@ export const ProductSlice = createSlice({
     addCategoryData: [],
     CategoryData:[],
     AddProducts:[],
+    ProductsData:[],
     loading: false,
     error: null,
   },
@@ -115,6 +134,18 @@ export const ProductSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+         // getAllProducts slice
+         .addCase(getAllProducts.pending,(state)=>{
+          state.loading = true;
+      })
+      .addCase(getAllProducts.fulfilled,(state,action)=>{
+          state.loading = false;
+          state.ProductsData = action.payload;
+      })
+      .addCase(getAllProducts.rejected,(state,action)=>{
+          state.loading = false;
+          state.error = action.payload;
+      })
 
   },
 });
