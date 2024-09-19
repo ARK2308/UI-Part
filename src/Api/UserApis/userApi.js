@@ -16,3 +16,9 @@ export const loginApi = async(data,header)=>{
 export const userLoggedInApi = async(data,header)=>{
     return await commonrequest("GET",`${BASE_URL}/userAuth/api/userloggedin`,"",header,"user");
 }
+
+
+// userLogoutApi api
+export const userLogoutApi = async(data,header)=>{
+    return await commonrequest("GET",`${BASE_URL}/userAuth/api/logout`,"",header,"user");
+}

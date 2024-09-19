@@ -5,8 +5,8 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 
 import "./header.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { userVerify } from "../../redux/slice/userAuthSlice/userAuthSlice";
-import { NavLink } from "react-router-dom";
+import { uselogoutfun, userVerify } from "../../redux/slice/userAuthSlice/userAuthSlice";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const userImg =
   "https://res.cloudinary.com/abdul5000/image/upload/v1698586142/qlbeoms6wevghueo0bfp.jpg";
@@ -21,9 +21,22 @@ const Header = () => {
   const handleShow = () => setShow(true);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const userLoggedIn = () => {
     dispatch(userVerify());
   };
+
+
+  const userlogouthandle = ()=>{
+    dispatch(uselogoutfun()).then((res)=>{
+        handleClose()
+        navigate("/")
+    }).catch((error)=>{
+        handleClose()
+
+        navigate("/")
+    })
+}
 
   useEffect(() => {
     userLoggedIn();
@@ -90,7 +103,7 @@ const Header = () => {
                             Profile
                           </NavLink>
                         </Dropdown.Item>
-                        <Dropdown.Item>
+                        <Dropdown.Item  onClick={userlogouthandle}>
                           <i class="fa-solid fa-right-from-bracket"></i>
                           &nbsp;&nbsp;&nbsp; Logout
                         </Dropdown.Item>
@@ -134,7 +147,7 @@ const Header = () => {
                                         <i class="fa-solid fa-user"></i>&nbsp;&nbsp;&nbsp;
                                         Profile
                                     </NavLink>
-                                    <div className='text-light'  style={{cursor:"pointer"}}>
+                                    <div className='text-light'   onClick={userlogouthandle}  style={{cursor:"pointer"}}>
                                         <i class="fa-solid fa-right-to-bracket"></i>&nbsp;&nbsp;
                                         Logout
                                     </div>

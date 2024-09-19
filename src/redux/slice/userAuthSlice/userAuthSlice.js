@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { loginApi, registerApi, userLoggedInApi } from "../../../Api/UserApis/userApi";
+import { loginApi, registerApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
 
 
 
@@ -62,6 +62,27 @@ export const userVerify = createAsyncThunk("userVerify",async(thunkApi)=>{
 });
 
 
+// uselogoutfun  Slice
+export const uselogoutfun = createAsyncThunk("uselogoutfun",async(thunkApi)=>{
+    try {
+        const response = await userLogoutApi();
+        
+
+        if(response.status == 200){
+            toast.success("User Logout Done")
+            localStorage.removeItem("usertoken")
+            return response.data
+        }else{
+            toast.success("User Logout Done")
+            localStorage.removeItem("usertoken")
+            return thunkApi.rejectWithValue("error");
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
 
 
 
@@ -83,6 +104,7 @@ export const UserSlice = createSlice({
         getAlluserData:[],
         loginuser:[],
         UserLoggedIn:[],
+        UserLogout:[],
         loading:false,
         error:null
     },
@@ -125,6 +147,22 @@ export const UserSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+        
+        // uselogoutfun Api
+        .addCase(uselogoutfun.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(uselogoutfun.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.UserLogout = [action.payload];
+            state.UserLoggedIn = [];
+            state.userCartData = [];
+        })
+        .addCase(uselogoutfun.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
     }
 });
 
