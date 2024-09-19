@@ -118,6 +118,23 @@ export const forgotpasswordvalid = createAsyncThunk("forgotpasswordvalid",async(
     }
 });
 
+// resetpasswordvalid  Slice
+export const resetpasswordfunc = createAsyncThunk("resetpasswordfunc",async(data)=>{
+    try {
+        const response = await resetpasswordApi(data);
+        
+
+        if(response.status == 200){
+            toast.success(response.data.message)
+            return response.data
+        }else{
+            toast.error("Your Link Expired, Please Generate New Link")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
 
 
 
@@ -141,6 +158,8 @@ export const UserSlice = createSlice({
         UserLoggedIn:[],
         UserLogout:[],
         forgotpasswordsend:[],
+        forgotpasswordverifyData:[],
+        resetpasswordData:[],
         loading:false,
         error:null
     },
@@ -227,6 +246,22 @@ export const UserSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+
+        
+        // resetpasswordfunc Api
+        .addCase(resetpasswordfunc.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(resetpasswordfunc.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.resetpasswordData = action.payload;
+           
+        })
+        .addCase(resetpasswordfunc.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
 
 
     }
