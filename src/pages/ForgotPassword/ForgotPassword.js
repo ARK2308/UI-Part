@@ -1,8 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-// import toast from 'react-hot-toast';
+import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { forgotpassword } from '../../redux/slice/userAuthSlice/userAuthSlice';
 
 const ForgotPassword = () => {
+
+    const dispatch = useDispatch()
+    const [email,setEmail] = useState("");
+
+    const handleChange = (e)=>{
+        setEmail(e.target.value);
+    }
+    const handleSubmit = (e)=>{
+        e.preventDefault();
+        if (email == "") {
+            toast.error("Email is Required!")
+        } else if (!email.includes("@")) {
+            toast.error("Enter Your Valid Email !")
+        }else{
+            const data = {
+                email:email
+            }
+            dispatch(forgotpassword(data)).then((res)=>{
+                if(res?.payload){
+                    setEmail("");
+                }
+            }).catch((error)=>{
+
+            })
+
+        }
+    }
+
     
   return (
     <>
@@ -15,10 +45,10 @@ const ForgotPassword = () => {
                     <form>
                         <div className="form_input">
                             <label htmlFor="email">Email</label>
-                            <input type="email" name="email" id="email" placeholder='Enter Your Email Address' />
+                            <input type="email" value={email}  onChange={handleChange}  name="email" id="email" placeholder='Enter Your Email Address' />
                         </div>
 
-                        <button className='btn'>Submit</button>
+                        <button className='btn' onClick={handleSubmit}>Submit</button>
                         
                     </form>
                 </div>

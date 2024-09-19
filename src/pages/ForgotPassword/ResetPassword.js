@@ -1,8 +1,36 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useDispatch } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { forgotpasswordvalid } from '../../redux/slice/userAuthSlice/userAuthSlice';
 
 const ResetPassword = () => {  
+
+    const { id, token } = useParams();
+    const dispatch = useDispatch();
+    const navigate = useNavigate()
+
+    const userValid = () => {
+        const data = {
+            id, token
+        }
+        dispatch(forgotpasswordvalid(data)).then((res) => {
+            if (res.payload) {
+                console.log("user valid")
+            } else {
+                navigate("*")
+            }
+        }).catch((error) => {
+            navigate("*")
+
+        })
+    }
     
     const handleSubmit = ()=>{}
+
+    
+    useEffect(() => {
+        userValid()
+    }, [])
 
   return (
     <>

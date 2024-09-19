@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { loginApi, registerApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
+import { forgotpasswordApi, forgotpasswordverifyApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
 
 
 
@@ -82,6 +82,41 @@ export const uselogoutfun = createAsyncThunk("uselogoutfun",async(thunkApi)=>{
     }
 });
 
+// forgotpassword  Slice
+export const forgotpassword = createAsyncThunk("forgotpassword",async(data)=>{
+    try {
+        const response = await forgotpasswordApi(data);
+       
+
+        if(response.status == 200){
+            toast.success("Password Reset Link Send In Your Email Please Check")
+           
+            return response.data
+        }else{
+            toast.error("Invalid details")
+            
+            
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+// forgotpasswordvalid  Slice
+export const forgotpasswordvalid = createAsyncThunk("forgotpasswordvalid",async(data)=>{
+    try {
+        const response = await forgotpasswordverifyApi(data);
+
+
+        if(response.status == 200){
+            return response.data
+        }else{
+            toast.error("Your Link Expired, Please Generate New Link")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
 
 
 
@@ -105,6 +140,7 @@ export const UserSlice = createSlice({
         loginuser:[],
         UserLoggedIn:[],
         UserLogout:[],
+        forgotpasswordsend:[],
         loading:false,
         error:null
     },
@@ -162,6 +198,36 @@ export const UserSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+
+           // forgotpassword Api
+           .addCase(forgotpassword.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(forgotpassword.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.forgotpasswordsend = action.payload;
+           
+        })
+        .addCase(forgotpassword.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+        
+        // forgotpasswordvalid Api
+        .addCase(forgotpasswordvalid.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(forgotpasswordvalid.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.forgotpasswordverifyData = action.payload;
+           
+        })
+        .addCase(forgotpasswordvalid.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
 
     }
 });

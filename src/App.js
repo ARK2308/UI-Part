@@ -25,6 +25,7 @@ import AdminProductspage from './pages/Admin/AdminProductsPage';
 import AddProducts from './pages/Admin/AddProducts';
 import AddCategory from './pages/Admin/AddCategory';
 import Orders from './pages/Admin/Orders';
+import Error from './pages/Error/Error'
 import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -53,6 +54,7 @@ function App() {
           <Route path="/shipping" element={<Layout><Shipping /></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout /></Layout>} />
           <Route path="/userorders" element={<Layout><UserOrders /></Layout>} />
+          <Route path='*' element={<Layout><Error /></Layout>} />
         </Routes>
         <Toaster /> 
     </div>
