@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddCategoryApi, AddProductsApi, DeleteProductApi, GetCategoryApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
+import { AddCategoryApi, AddProductsApi, DeleteProductApi, GetCategoryApi, GetLatestProductsApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
 
 
@@ -78,6 +78,26 @@ export const getAllProducts = createAsyncThunk("getAllProducts",async(data)=>{
   }
 });
 
+
+//  getLatestProducts Slice
+export const getLatestProducts = createAsyncThunk("getLatestProducts",async(thunkApi)=>{
+    try {
+        const response = await GetLatestProductsApi();
+
+        if(response.status == 200){
+            return response.data
+        }else{
+            return thunkApi.rejectWithValue("error");
+
+            // toast.error(response.response.data.error);
+           
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+// Delete product 
 export const deleteProduct = createAsyncThunk("deleteProduct",async(data)=>{
   try {
       const response = await DeleteProductApi(data);
@@ -107,6 +127,7 @@ export const ProductSlice = createSlice({
     CategoryData:[],
     AddProducts:[],
     ProductsData:[],
+    LatestProducts:[],
     DeleteProducts:[],
     loading: false,
     error: null,
@@ -163,6 +184,18 @@ export const ProductSlice = createSlice({
           state.loading = false;
           state.error = action.payload;
       })
+          // getLatestProducts slice
+          .addCase(getLatestProducts.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(getLatestProducts.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.LatestProducts = action.payload;
+        })
+        .addCase(getLatestProducts.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
 
       // deleteProduct slice
       .addCase(deleteProduct.pending,(state)=>{

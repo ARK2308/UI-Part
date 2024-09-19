@@ -23,6 +23,12 @@ export const GetProductsApi = async(data,header)=>{
     return await commonrequest("GET",`${BASE_URL}/product/api/getproducts?categoryid=${data.selectedcategory}&page=${data.page}`,"",header,"admin");
 }
 
+// GetLatestProductsApi api
+export const GetLatestProductsApi = async(data,header)=>{
+    return await commonrequest("GET",`${BASE_URL}/product/api/getlatestproducts`,"",header,"user");
+}
+
+
 
 
 export const DeleteProductApi = async(data,header)=>{
