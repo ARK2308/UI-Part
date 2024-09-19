@@ -30,7 +30,12 @@ export const GetLatestProductsApi = async(data,header)=>{
 
 
 
-
+// Delete Product 
 export const DeleteProductApi = async(data,header)=>{
     return await commonrequest("DELETE",`${BASE_URL}/product/api/deleteproducts/${data.productid}`,{},header,"admin");
 } 
+
+// GetSingleProductApi api
+export const GetSingleProductApi = async(data,header)=>{
+    return await commonrequest("GET",`${BASE_URL}/product/api/getsingleproduct/${data.productid}`,"",header,"user");
+}

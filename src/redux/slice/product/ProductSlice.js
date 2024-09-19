@@ -1,9 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AddCategoryApi, AddProductsApi, DeleteProductApi, GetCategoryApi, GetLatestProductsApi, GetProductsApi } from "../../../Api/ProductApis/Productapi";
+import {
+  AddCategoryApi,
+  AddProductsApi,
+  DeleteProductApi,
+  GetCategoryApi,
+  GetLatestProductsApi,
+  GetProductsApi,
+  GetSingleProductApi,
+} from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
-
-
-
 
 // Admin AdminAddCategory Slice
 export const AdminAddCategory = createAsyncThunk(
@@ -26,190 +31,220 @@ export const AdminAddCategory = createAsyncThunk(
 );
 
 // GetCategory Slice
-export const getCategory = createAsyncThunk("getCategory",async(thunkApi)=>{
-    try {
-        const response = await GetCategoryApi();
+export const getCategory = createAsyncThunk("getCategory", async (thunkApi) => {
+  try {
+    const response = await GetCategoryApi();
 
-        if(response.status == 200){
-            
-            return response.data
-        }else{
-            // toast.error(response.response.data.error);
-            return thunkApi.rejectWithValue("error");
-        }
-    } catch (error) {
-        throw error;
+    if (response.status == 200) {
+      return response.data;
+    } else {
+      // toast.error(response.response.data.error);
+      return thunkApi.rejectWithValue("error");
     }
+  } catch (error) {
+    throw error;
+  }
 });
-
 
 // Add Product Slice
-export const AddProductsslice = createAsyncThunk("AddProducts",async(data)=>{
-  try {
-      const response = await AddProductsApi(data.data,data.categoryId,data.config);
+export const AddProductsslice = createAsyncThunk(
+  "AddProducts",
+  async (data) => {
+    try {
+      const response = await AddProductsApi(
+        data.data,
+        data.categoryId,
+        data.config
+      );
 
-      if(response.status == 200){
-          toast.success("Product Added")
-          return response.data
-      }else{
-          toast.error(response.response.data.error);
-         
+      if (response.status == 200) {
+        toast.success("Product Added");
+        return response.data;
+      } else {
+        toast.error(response.response.data.error);
       }
-  } catch (error) {
+    } catch (error) {
       throw error;
+    }
   }
-});
-
-
+);
 
 // get Product Slice
-export const getAllProducts = createAsyncThunk("getAllProducts",async(data)=>{
-  try {
+export const getAllProducts = createAsyncThunk(
+  "getAllProducts",
+  async (data) => {
+    try {
       const response = await GetProductsApi(data);
 
-      if(response.status == 200){
-          return response.data
-      }else{
-          toast.error(response.response.data.error);
-         
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        toast.error(response.response.data.error);
       }
-  } catch (error) {
+    } catch (error) {
       throw error;
+    }
   }
-});
-
+);
 
 //  getLatestProducts Slice
-export const getLatestProducts = createAsyncThunk("getLatestProducts",async(thunkApi)=>{
+export const getLatestProducts = createAsyncThunk(
+  "getLatestProducts",
+  async (thunkApi) => {
     try {
-        const response = await GetLatestProductsApi();
+      const response = await GetLatestProductsApi();
 
-        if(response.status == 200){
-            return response.data
-        }else{
-            return thunkApi.rejectWithValue("error");
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        return thunkApi.rejectWithValue("error");
 
-            // toast.error(response.response.data.error);
-           
-        }
-    } catch (error) {
-        throw error;
-    }
-});
-
-// Delete product 
-export const deleteProduct = createAsyncThunk("deleteProduct",async(data)=>{
-  try {
-      const response = await DeleteProductApi(data);
-
-      if(response.status == 200){
-          toast.success("Product Delete Sucessfully");
-          return response.data
-      }else{
-          toast.error("Error");
-         
+        // toast.error(response.response.data.error);
       }
-  } catch (error) {
+    } catch (error) {
       throw error;
+    }
+  }
+);
+
+// Delete product
+export const deleteProduct = createAsyncThunk("deleteProduct", async (data) => {
+  try {
+    const response = await DeleteProductApi(data);
+
+    if (response.status == 200) {
+      toast.success("Product Delete Sucessfully");
+      return response.data;
+    } else {
+      toast.error("Error");
+    }
+  } catch (error) {
+    throw error;
   }
 });
 
+// getSingleProducts Slice
+export const getSingleProducts = createAsyncThunk(
+  "getSingleProducts",
+  async (data) => {
+    try {
+      const response = await GetSingleProductApi(data);
 
-
-
-
+      if (response.status == 200) {
+        return response.data;
+      } else {
+        toast.error("Error");
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 // crreate reducer and action
 export const ProductSlice = createSlice({
   name: "ProductSlice",
   initialState: {
     addCategoryData: [],
-    CategoryData:[],
-    AddProducts:[],
-    ProductsData:[],
-    LatestProducts:[],
-    DeleteProducts:[],
+    CategoryData: [],
+    AddProducts: [],
+    ProductsData: [],
+    LatestProducts: [],
+    DeleteProducts: [],
+    singleProducts: [],
     loading: false,
     error: null,
   },
   extraReducers: (builder) => {
-     // Admin AdminAddCategory
-     builder.addCase(AdminAddCategory.pending,(state)=>{
+    // Admin AdminAddCategory
+    builder
+      .addCase(AdminAddCategory.pending, (state) => {
         state.loading = true;
-    })
-    .addCase(AdminAddCategory.fulfilled,(state,action)=>{
+      })
+      .addCase(AdminAddCategory.fulfilled, (state, action) => {
         state.loading = false;
         state.addCategoryData = action.payload;
-    })
-    .addCase(AdminAddCategory.rejected,(state,action)=>{
+      })
+      .addCase(AdminAddCategory.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-    })
+      })
 
-    
-        // getcategory
-        .addCase(getCategory.pending,(state)=>{
-            state.loading = true;
-        })
-        .addCase(getCategory.fulfilled,(state,action)=>{
-            state.loading = false;
-            state.CategoryData = action.payload;
-        })
-        .addCase(getCategory.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
+      // getcategory
+      .addCase(getCategory.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCategory.fulfilled, (state, action) => {
+        state.loading = false;
+        state.CategoryData = action.payload;
+      })
+      .addCase(getCategory.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
-          // AddProductsslice
-          .addCase(AddProductsslice.pending,(state)=>{
-            state.loading = true;
-        })
-        .addCase(AddProductsslice.fulfilled,(state,action)=>{
-            state.loading = false;
-            state.AddProducts = action.payload;
-        })
-        .addCase(AddProductsslice.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
-         // getAllProducts slice
-         .addCase(getAllProducts.pending,(state)=>{
-          state.loading = true;
+      // AddProductsslice
+      .addCase(AddProductsslice.pending, (state) => {
+        state.loading = true;
       })
-      .addCase(getAllProducts.fulfilled,(state,action)=>{
-          state.loading = false;
-          state.ProductsData = action.payload;
+      .addCase(AddProductsslice.fulfilled, (state, action) => {
+        state.loading = false;
+        state.AddProducts = action.payload;
       })
-      .addCase(getAllProducts.rejected,(state,action)=>{
-          state.loading = false;
-          state.error = action.payload;
+      .addCase(AddProductsslice.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
       })
-          // getLatestProducts slice
-          .addCase(getLatestProducts.pending,(state)=>{
-            state.loading = true;
-        })
-        .addCase(getLatestProducts.fulfilled,(state,action)=>{
-            state.loading = false;
-            state.LatestProducts = action.payload;
-        })
-        .addCase(getLatestProducts.rejected,(state,action)=>{
-            state.loading = false;
-            state.error = action.payload;
-        })
+      // getAllProducts slice
+      .addCase(getAllProducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getAllProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.ProductsData = action.payload;
+      })
+      .addCase(getAllProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      // getLatestProducts slice
+      .addCase(getLatestProducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getLatestProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.LatestProducts = action.payload;
+      })
+      .addCase(getLatestProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
 
       // deleteProduct slice
-      .addCase(deleteProduct.pending,(state)=>{
+      .addCase(deleteProduct.pending, (state) => {
         state.loading = true;
-    })
-    .addCase(deleteProduct.fulfilled,(state,action)=>{
+      })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
         state.loading = false;
         state.DeleteProducts = [action.payload];
-    })
-    .addCase(deleteProduct.rejected,(state,action)=>{
+      })
+      .addCase(deleteProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-    })
+      })
 
+      // getSingleProducts slice
+      .addCase(getSingleProducts.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getSingleProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleProducts = [action.payload];
+      })
+      .addCase(getSingleProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   },
 });
 
