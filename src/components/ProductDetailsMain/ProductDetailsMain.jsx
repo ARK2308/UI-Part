@@ -15,6 +15,7 @@ import {
   Addreview,
   getSingleProducts,
   productreview,
+  reviewDelete,
 } from "../../redux/slice/product/ProductSlice";
 import toast from "react-hot-toast";
 
@@ -22,7 +23,8 @@ const ProductDetailsMain = () => {
   const { singleProducts } = useSelector((state) => state.Product);
   const { UserLoggedIn } = useSelector((state) => state.User);
   const { addProductReview } = useSelector((state) => state.Product);
-
+  const { deleteReview } = useSelector((state) => state.Product);
+  console.log("first" , deleteReview)
   const { ProductReview } = useSelector((state) => state.Product);
 
   const dispatch = useDispatch();
@@ -102,6 +104,15 @@ const ProductDetailsMain = () => {
     }
   };
 
+//   product review delete
+  const handleReviewDelete = (id) => {
+
+    console.log("first" , id)
+    const data = {
+        reviewid: id,
+      };
+      dispatch(reviewDelete(data));
+  };
   // get product review
   const getproductreviewDetails = () => {
     const data = {
@@ -127,7 +138,7 @@ const ProductDetailsMain = () => {
 
   useEffect(() => {
     getproductreviewDetails();
-  }, [singleProducts]);
+  }, [singleProducts ,deleteReview]);
 
   return (
     <>
@@ -139,17 +150,17 @@ const ProductDetailsMain = () => {
           </div>
           <div className="right_cart">
             <h3>{singleProducts[0]?.productname}</h3>
-            {
-                            showrating ? <div className="reviewicon">
-                                {
-                                    Array.from({ length: showrating }).map((ele, ind) => {
-                                        return <i class="fa-solid fa-star"></i>
-                                    })
-                                }
+            {showrating ? (
+              <div className="reviewicon">
+                {Array.from({ length: showrating }).map((ele, ind) => {
+                  return <i class="fa-solid fa-star"></i>;
+                })}
 
-                                <span>&nbsp;{showrating}&nbsp; Rating</span>
-                            </div> : "NO Rating"
-                        }
+                <span>&nbsp;{showrating}&nbsp; Rating</span>
+              </div>
+            ) : (
+              "NO Rating"
+            )}
             <p className="mrp">M.R.P. : ₹ {singleProducts[0]?.price} </p>
             <div className="discount_box">
               <h5>
@@ -225,7 +236,10 @@ const ProductDetailsMain = () => {
                           </Card.Text>
                           <Card.Text>{element.description}</Card.Text>
                           {UserLoggedIn[0]?._id === element?.userid ? (
-                            <Button variant="none">
+                            <Button
+                              variant="none"
+                              onClick={() => handleReviewDelete(element._id)}
+                            >
                               <i
                                 class="fa-solid fa-trash"
                                 style={{ color: "red" }}

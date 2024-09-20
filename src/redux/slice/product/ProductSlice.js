@@ -8,6 +8,7 @@ import {
   GetLatestProductsApi,
   GetProductsApi,
   GetSingleProductApi,
+  ProductReviewDeleteApi,
   ProductReviewgetApi,
 } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
@@ -179,6 +180,22 @@ export const productreview = createAsyncThunk("productreview",async(data)=>{
     }
 });
 
+// reviewDelete Slice
+export const reviewDelete = createAsyncThunk("reviewDelete",async(data)=>{
+    try {
+        const response = await ProductReviewDeleteApi(data);
+
+        if(response.status == 200){
+            toast.success("Review Sucessfully Delete")
+            return response.data
+        }else{
+            toast.error("Error");
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
 
 
 
@@ -212,6 +229,7 @@ export const ProductSlice = createSlice({
     singleProducts: [],
     addProductReview:[],
     ProductReview:[],
+    deleteReview:[],
     loading: false,
     error: null,
   },
@@ -329,6 +347,19 @@ export const ProductSlice = createSlice({
             state.ProductReview = action.payload;
         })
         .addCase(productreview.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+         // reviewDelete slice
+         .addCase(reviewDelete.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(reviewDelete.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.deleteReview = [action.payload];
+        })
+        .addCase(reviewDelete.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
