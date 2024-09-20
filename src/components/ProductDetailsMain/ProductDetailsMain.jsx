@@ -11,17 +11,22 @@ import { Form } from "react-bootstrap";
 import "./ProductDetailsmain.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getSingleProducts } from "../../redux/slice/product/ProductSlice";
+import { Addreview, getSingleProducts } from "../../redux/slice/product/ProductSlice";
 import toast from "react-hot-toast";
 
 const ProductDetailsMain = () => {
+
+
   const { singleProducts } = useSelector((state) => state.Product);
   const { UserLoggedIn } = useSelector((state) => state.User);
+  const { addProductReview } = useSelector((state) => state.Product);
 
 
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const [show, setShow] = useState(false);
+  const [description, setDescription] = useState("");
+  const [rating, setRating] = useState("");
 
   const { id } = useParams();
   const getProductsDetails = () => {
@@ -50,9 +55,49 @@ const ProductDetailsMain = () => {
     }
 }
 
+    // review set
+    const handlesetRating = (e) => {
+        const { value, label } = e;
+        setRating(value);
+    }
+
+    
+    const handleAddReview = (e) => {
+        e.preventDefault();
+
+        if (rating == "") {
+            toast.error("rating is required!");
+        } else if (description == "") {
+            toast.error("description is required!");
+        } else {
+            const data = {
+                username: UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : "",
+                rating: rating,
+                description: description
+            }
+
+            const productreviewaddddata = {
+                data,
+                productid: singleProducts[0]?._id
+            }
+            dispatch(Addreview(productreviewaddddata)).then((res) => {
+                if (res?.payload) {
+                    setDescription("");
+                    setRating("")
+                    handleClose()
+                }
+            }).catch((error) => {
+                console.log("error", error)
+                handleClose()
+            })
+      
+        }
+    }
+
+
   useEffect(() => {
     getProductsDetails();
-  }, [id]);
+  }, [id , addProductReview]);
 
   return (
     <>
@@ -180,21 +225,21 @@ const ProductDetailsMain = () => {
               <form>
                 <div className="form_input">
                   <label htmlFor="username">Your Name</label>
-                  <input type="text" name="username" id="username" disabled />
+                  <input type="text" name="username" value={UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : ""} id="username" disabled />
                 </div>
                 <div className="form_input">
                   <label htmlFor="username">Give The Rating</label>
-                  <Select options={options} />
+                  <Select options={options}  onChange={handlesetRating} />
                 </div>
                 <Form.Group
                   className="mb-3 mt-2"
                   controlId="exampleForm.ControlTextarea1"
                 >
                   <Form.Label>Description</Form.Label>
-                  <Form.Control as="textarea" name="description" rows={3} />
+                  <Form.Control as="textarea" onChange={(e) => setDescription(e.target.value)}  name="description" rows={3} />
                 </Form.Group>
 
-                <button className="btn">Submit</button>
+                <button className="btn"  onClick={handleAddReview} >Submit</button>
               </form>
             </div>
           </Modal.Body>

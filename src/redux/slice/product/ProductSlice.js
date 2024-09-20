@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   AddCategoryApi,
   AddProductsApi,
+  AddReviewApi,
   DeleteProductApi,
   GetCategoryApi,
   GetLatestProductsApi,
@@ -141,6 +142,43 @@ export const getSingleProducts = createAsyncThunk(
   }
 );
 
+
+// Addreview Slice
+export const Addreview = createAsyncThunk("Addreview",async(data)=>{
+    try {
+        const response = await AddReviewApi(data);
+
+        if(response.status == 200){
+            toast.success("Review Sucessfully Added")
+            return response.data
+        }else{
+            toast.error("Error");
+           
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // crreate reducer and action
 export const ProductSlice = createSlice({
   name: "ProductSlice",
@@ -152,6 +190,7 @@ export const ProductSlice = createSlice({
     LatestProducts: [],
     DeleteProducts: [],
     singleProducts: [],
+    addProductReview:[],
     loading: false,
     error: null,
   },
@@ -244,7 +283,22 @@ export const ProductSlice = createSlice({
       .addCase(getSingleProducts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+
+           // Addreview slice
+        .addCase(Addreview.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(Addreview.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.addProductReview = [action.payload];
+        })
+        .addCase(Addreview.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
   },
 });
 

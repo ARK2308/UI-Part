@@ -39,3 +39,9 @@ export const DeleteProductApi = async(data,header)=>{
 export const GetSingleProductApi = async(data,header)=>{
     return await commonrequest("GET",`${BASE_URL}/product/api/getsingleproduct/${data.productid}`,"",header,"user");
 }
+
+
+// AddReviewApi api
+export const AddReviewApi = async(data,header)=>{
+    return await commonrequest("POST",`${BASE_URL}/product/api/productreview/${data.productid}`,data.data,header,"user");
+}
