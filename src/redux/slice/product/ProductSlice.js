@@ -8,6 +8,7 @@ import {
   GetLatestProductsApi,
   GetProductsApi,
   GetSingleProductApi,
+  ProductReviewgetApi,
 } from "../../../Api/ProductApis/Productapi";
 import { toast } from "react-hot-toast";
 
@@ -161,6 +162,25 @@ export const Addreview = createAsyncThunk("Addreview",async(data)=>{
 });
 
 
+// productreview Slice
+export const productreview = createAsyncThunk("productreview",async(data)=>{
+    try {
+        const response = await ProductReviewgetApi(data);
+
+        if(response.status == 200){
+            return response.data
+        }else{
+            // toast.error("Error");
+            console.log("errr")
+           
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+
 
 
 
@@ -191,6 +211,7 @@ export const ProductSlice = createSlice({
     DeleteProducts: [],
     singleProducts: [],
     addProductReview:[],
+    ProductReview:[],
     loading: false,
     error: null,
   },
@@ -295,6 +316,19 @@ export const ProductSlice = createSlice({
             state.addProductReview = [action.payload];
         })
         .addCase(Addreview.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+         // productreview slice
+         .addCase(productreview.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(productreview.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.ProductReview = action.payload;
+        })
+        .addCase(productreview.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })

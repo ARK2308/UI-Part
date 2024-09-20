@@ -11,22 +11,28 @@ import { Form } from "react-bootstrap";
 import "./ProductDetailsmain.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { Addreview, getSingleProducts } from "../../redux/slice/product/ProductSlice";
+import {
+  Addreview,
+  getSingleProducts,
+  productreview,
+} from "../../redux/slice/product/ProductSlice";
 import toast from "react-hot-toast";
 
 const ProductDetailsMain = () => {
-
-
   const { singleProducts } = useSelector((state) => state.Product);
   const { UserLoggedIn } = useSelector((state) => state.User);
   const { addProductReview } = useSelector((state) => state.Product);
 
+  const { ProductReview } = useSelector((state) => state.Product);
 
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const [show, setShow] = useState(false);
   const [description, setDescription] = useState("");
   const [rating, setRating] = useState("");
+
+  const [showrating, setShowrating] = useState("");
 
   const { id } = useParams();
   const getProductsDetails = () => {
@@ -41,63 +47,87 @@ const ProductDetailsMain = () => {
   const handleShow = () => setShow(true);
 
   const options = [
-    { value: "chocolate", label: "Chocolate" },
-    { value: "strawberry", label: "Strawberry" },
-    { value: "vanilla", label: "Vanilla" },
+    { value: "1", label: "1" },
+    { value: "2", label: "2" },
+    { value: "3", label: "3" },
+    { value: "4", label: "4" },
+    { value: "5", label: "5" },
   ];
 
   const handleOpenModel = () => {
     if (UserLoggedIn.length == 0) {
-        toast.error("Please Login Before Write Review");
-        navigate("/adminlogin")
+      toast.error("Please Login Before Write Review");
+      navigate("/adminlogin");
     } else {
-        handleShow()
+      handleShow();
     }
-}
+  };
 
-    // review set
-    const handlesetRating = (e) => {
-        const { value, label } = e;
-        setRating(value);
+  // review set
+  const handlesetRating = (e) => {
+    const { value, label } = e;
+    setRating(value);
+  };
+
+  const handleAddReview = (e) => {
+    e.preventDefault();
+
+    if (rating == "") {
+      toast.error("rating is required!");
+    } else if (description == "") {
+      toast.error("description is required!");
+    } else {
+      const data = {
+        username: UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : "",
+        rating: rating,
+        description: description,
+      };
+
+      const productreviewaddddata = {
+        data,
+        productid: singleProducts[0]?._id,
+      };
+      dispatch(Addreview(productreviewaddddata))
+        .then((res) => {
+          if (res?.payload) {
+            setDescription("");
+            setRating("");
+            handleClose();
+          }
+        })
+        .catch((error) => {
+          console.log("error", error);
+          handleClose();
+        });
     }
+  };
 
-    
-    const handleAddReview = (e) => {
-        e.preventDefault();
+  // get product review
+  const getproductreviewDetails = () => {
+    const data = {
+      productid: singleProducts[0]?._id,
+    };
 
-        if (rating == "") {
-            toast.error("rating is required!");
-        } else if (description == "") {
-            toast.error("description is required!");
-        } else {
-            const data = {
-                username: UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : "",
-                rating: rating,
-                description: description
-            }
+    dispatch(productreview(data));
+  };
 
-            const productreviewaddddata = {
-                data,
-                productid: singleProducts[0]?._id
-            }
-            dispatch(Addreview(productreviewaddddata)).then((res) => {
-                if (res?.payload) {
-                    setDescription("");
-                    setRating("")
-                    handleClose()
-                }
-            }).catch((error) => {
-                console.log("error", error)
-                handleClose()
-            })
-      
-        }
-    }
+  useEffect(() => {
+    let totalrating = 0;
 
+    ProductReview.map((ele) => {
+      totalrating = totalrating + parseInt(ele.rating);
+    });
+
+    setShowrating(Math.round(totalrating / ProductReview.length));
+  }, [ProductReview]);
 
   useEffect(() => {
     getProductsDetails();
-  }, [id , addProductReview]);
+  }, [id, addProductReview]);
+
+  useEffect(() => {
+    getproductreviewDetails();
+  }, [singleProducts]);
 
   return (
     <>
@@ -109,19 +139,17 @@ const ProductDetailsMain = () => {
           </div>
           <div className="right_cart">
             <h3>{singleProducts[0]?.productname}</h3>
-            {/* {
-                            showrating ? */}
-            <div className="reviewicon">
-              {/* {
-                                    Array.from({ length: showrating }).map((el, ind) => {
+            {
+                            showrating ? <div className="reviewicon">
+                                {
+                                    Array.from({ length: showrating }).map((ele, ind) => {
+                                        return <i class="fa-solid fa-star"></i>
                                     })
-                                } */}
-              {/* return  */}
-              <i class="fa-solid fa-star"></i>
-              <span> &nbsp; &nbsp;Rating</span>
-            </div>{" "}
-            : "no rating"
-            {/* } */}
+                                }
+
+                                <span>&nbsp;{showrating}&nbsp; Rating</span>
+                            </div> : "NO Rating"
+                        }
             <p className="mrp">M.R.P. : ₹ {singleProducts[0]?.price} </p>
             <div className="discount_box">
               <h5>
@@ -181,38 +209,37 @@ const ProductDetailsMain = () => {
             </button>
           </div>
           <div className="mt-2 mb-5 d-flex justify-content-between flex-wrap">
-            {/* {
-                            productreview?.length > 0 ? productreview?.map((element, index) => {
-                                return (
-                                    <> */}
-            <Card style={{ width: "20rem" }} className="mb-3">
-              <Card.Body>
-                <Card.Title>element.username</Card.Title>
-
-                <Card.Text className="d-flex" style={{ color: "#f5d742" }}>
-                  {/* {
-                                                        Array.from({ length: element.rating }).map((el, ind) => {
-                                                            return <i class="fa-solid fa-star"></i>
-                                                        })
-                                                    } */}
-                  <i class="fa-solid fa-star"></i>
-                </Card.Text>
-
-                <Card.Text>element.description</Card.Text>
-                {/* {
-                                                    userLoggedIn[0]?._id === element?.userid ? <Button variant='none' onClick={() => handleReviewDelete(element._id)}> <i class="fa-solid fa-trash" style={{ color: "red" }}></i></Button> : ""
-                                                } */}
-                <Button variant="none">
-                  {" "}
-                  <i class="fa-solid fa-trash" style={{ color: "red" }}></i>
-                </Button>
-              </Card.Body>
-            </Card>
-            {/* </>
-                                )
-                            }) : */}
-            <div>No review</div>
-            {/* } */}
+            {ProductReview?.length > 0
+              ? ProductReview.map((element, index) => {
+                  return (
+                    <>
+                      <Card style={{ width: "20rem" }} className="mb-3">
+                        <Card.Body>
+                          <Card.Title>{element.username}</Card.Title>
+                          <Card.Text style={{ color: "#f5d742" }}>
+                            {Array.from({ length: element.rating }).map(
+                              (ele, ind) => {
+                                return <i class="fa-solid fa-star"></i>;
+                              }
+                            )}
+                          </Card.Text>
+                          <Card.Text>{element.description}</Card.Text>
+                          {UserLoggedIn[0]?._id === element?.userid ? (
+                            <Button variant="none">
+                              <i
+                                class="fa-solid fa-trash"
+                                style={{ color: "red" }}
+                              ></i>
+                            </Button>
+                          ) : (
+                            ""
+                          )}
+                        </Card.Body>
+                      </Card>
+                    </>
+                  );
+                })
+              : "No Review"}
           </div>
         </div>
 
@@ -225,21 +252,36 @@ const ProductDetailsMain = () => {
               <form>
                 <div className="form_input">
                   <label htmlFor="username">Your Name</label>
-                  <input type="text" name="username" value={UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : ""} id="username" disabled />
+                  <input
+                    type="text"
+                    name="username"
+                    value={
+                      UserLoggedIn.length > 0 ? UserLoggedIn[0]?.firstname : ""
+                    }
+                    id="username"
+                    disabled
+                  />
                 </div>
                 <div className="form_input">
                   <label htmlFor="username">Give The Rating</label>
-                  <Select options={options}  onChange={handlesetRating} />
+                  <Select options={options} onChange={handlesetRating} />
                 </div>
                 <Form.Group
                   className="mb-3 mt-2"
                   controlId="exampleForm.ControlTextarea1"
                 >
                   <Form.Label>Description</Form.Label>
-                  <Form.Control as="textarea" onChange={(e) => setDescription(e.target.value)}  name="description" rows={3} />
+                  <Form.Control
+                    as="textarea"
+                    onChange={(e) => setDescription(e.target.value)}
+                    name="description"
+                    rows={3}
+                  />
                 </Form.Group>
 
-                <button className="btn"  onClick={handleAddReview} >Submit</button>
+                <button className="btn" onClick={handleAddReview}>
+                  Submit
+                </button>
               </form>
             </div>
           </Modal.Body>
