@@ -37,3 +37,4 @@ export const forgotpasswordverifyApi = async(data,header)=>{
 export const resetpasswordApi = async(data,header)=>{
     return await commonrequest("PUT",`${BASE_URL}/userauth/api/resetpassword/${data.id}/${data.token}`,data.passworddata,header,"user");
 }
+

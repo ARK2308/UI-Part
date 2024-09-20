@@ -18,14 +18,16 @@ import {
   reviewDelete,
 } from "../../redux/slice/product/ProductSlice";
 import toast from "react-hot-toast";
+import { AddtoCart } from "../../redux/slice/userAuthSlice/userAuthSlice";
 
 const ProductDetailsMain = () => {
   const { singleProducts } = useSelector((state) => state.Product);
   const { UserLoggedIn } = useSelector((state) => state.User);
   const { addProductReview } = useSelector((state) => state.Product);
   const { deleteReview } = useSelector((state) => state.Product);
-  console.log("first" , deleteReview)
   const { ProductReview } = useSelector((state) => state.Product);
+
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -122,6 +124,12 @@ const ProductDetailsMain = () => {
     dispatch(productreview(data));
   };
 
+   // add to cart
+   const handleIncrement = (e) => {
+    dispatch(AddtoCart(e));
+  };
+
+
   useEffect(() => {
     let totalrating = 0;
 
@@ -204,7 +212,9 @@ const ProductDetailsMain = () => {
               </span>
             </p>
             <div className="addtocart">
-              <Button className="btn mt-3 addcartbtn" variant="dark">
+              <Button className="btn mt-3 addcartbtn" 
+               onClick={() => handleIncrement(singleProducts[0]?._id)}
+              variant="dark">
                 Add to Cart
               </Button>
             </div>

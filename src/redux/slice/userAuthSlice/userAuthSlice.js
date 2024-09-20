@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { forgotpasswordApi, forgotpasswordverifyApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
+import { AddtoCartApi } from "../../../Api/cartApis/cartApi";
 
 
 
@@ -135,6 +136,23 @@ export const resetpasswordfunc = createAsyncThunk("resetpasswordfunc",async(data
     }
 });
 
+// AddtoCart  Slice
+export const AddtoCart = createAsyncThunk("AddtoCart",async(data)=>{
+    try {
+        const response = await AddtoCartApi(data);
+        
+
+        if(response.status == 200){
+            toast.success(response.data.message)
+            return response.data
+        }else{
+            toast.error(response.response.data.error)
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
 
 
 
@@ -160,6 +178,7 @@ export const UserSlice = createSlice({
         forgotpasswordsend:[],
         forgotpasswordverifyData:[],
         resetpasswordData:[],
+        AddCart:[],
         loading:false,
         error:null
     },
@@ -258,6 +277,20 @@ export const UserSlice = createSlice({
            
         })
         .addCase(resetpasswordfunc.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+           // AddtoCart Api
+           .addCase(AddtoCart.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(AddtoCart.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.AddCart = action.payload;
+           
+        })
+        .addCase(AddtoCart.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
