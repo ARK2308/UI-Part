@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { forgotpasswordApi, forgotpasswordverifyApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
-import { AddtoCartApi, GetUserCartApi } from "../../../Api/cartApis/cartApi";
+import { AddtoCartApi, GetUserCartApi, RemoveAllCartItemsApi, RemoveSingleCartItemsApi } from "../../../Api/cartApis/cartApi";
 
 
 
@@ -170,6 +170,40 @@ export const usercart = createAsyncThunk("usercart",async(thunkApi)=>{
     }
 });
 
+// removeSingle  Slice
+export const removeSingle = createAsyncThunk("removeSingle",async(data)=>{
+    try {
+        const response = await RemoveSingleCartItemsApi(data);
+       
+
+        if(response.status == 200){
+            toast.success(response.data.message)
+            return response.data
+        }else{
+            toast.error(response.response.data.error)
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+export const removeItem = createAsyncThunk("removeItem",async(data)=>{
+    try {
+        const response = await RemoveAllCartItemsApi(data);
+        
+
+        if(response.status == 200){
+            toast.success(response.data.message)
+            return response.data
+        }else{
+            toast.error(response.response.data.error)
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
 
 
 
@@ -197,6 +231,8 @@ export const UserSlice = createSlice({
         resetpasswordData:[],
         AddCart:[],
         userCartData:[],
+        removesingleCart:[],
+        removeCart:[],
         loading:false,
         error:null
     },
@@ -327,6 +363,33 @@ export const UserSlice = createSlice({
             state.error = action.payload;
         })
 
+          // removeSingle Api
+          .addCase(removeSingle.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(removeSingle.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.removesingleCart = action.payload;
+           
+        })
+        .addCase(removeSingle.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+          // removeItem Api
+          .addCase(removeItem.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(removeItem.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.removeCart = action.payload;
+           
+        })
+        .addCase(removeItem.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
 
 
     }

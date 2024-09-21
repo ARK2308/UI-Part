@@ -11,3 +11,13 @@ export const AddtoCartApi = async(data,header)=>{
 export const GetUserCartApi = async(data,header)=>{
     return await commonrequest("GET",`${BASE_URL}/carts/api/getcarts`,"",header,"user");
 }
+
+// RemoveSingleCartItemsApi api
+export const RemoveSingleCartItemsApi = async(data,header)=>{
+    return await commonrequest("DELETE",`${BASE_URL}/carts/api/removesingleitem/${data}`,{},header,"user");
+}
+
+// RemoveAllCartItemsApi api
+export const RemoveAllCartItemsApi = async(data,header)=>{
+    return await commonrequest("DELETE",`${BASE_URL}/carts/api/removeallitems/${data}`,{},header,"user");
+}
