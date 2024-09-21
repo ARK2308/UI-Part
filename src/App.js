@@ -27,6 +27,7 @@ import AddCategory from './pages/Admin/AddCategory';
 import Orders from './pages/Admin/Orders';
 import Error from './pages/Error/Error'
 import toast, { Toaster } from 'react-hot-toast';
+import Payment from './pages/payment/Payment';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
           <Route path="/resetpassword/:id/:token" element={<Layout><ResetPassword /></Layout>} />
           <Route path="/shipping" element={<Layout><Shipping /></Layout>} />
           <Route path="/checkout" element={<Layout><Checkout /></Layout>} />
+          <Route path="/payment" element={<Layout><Payment /></Layout>} />
           <Route path="/userorders" element={<Layout><UserOrders /></Layout>} />
           <Route path='*' element={<Layout><Error /></Layout>} />
         </Routes>
