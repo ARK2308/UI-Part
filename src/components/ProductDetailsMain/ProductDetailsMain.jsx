@@ -26,7 +26,7 @@ const ProductDetailsMain = () => {
   const { addProductReview } = useSelector((state) => state.Product);
   const { deleteReview } = useSelector((state) => state.Product);
   const { ProductReview } = useSelector((state) => state.Product);
-
+  const { userCartData } = useSelector((state) => state.User);
 
 
   const dispatch = useDispatch();
@@ -142,7 +142,7 @@ const ProductDetailsMain = () => {
 
   useEffect(() => {
     getProductsDetails();
-  }, [id, addProductReview]);
+  }, [id, addProductReview ,userCartData]);
 
   useEffect(() => {
     getproductreviewDetails();

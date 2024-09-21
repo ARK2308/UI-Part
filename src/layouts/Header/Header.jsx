@@ -5,7 +5,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 
 import "./header.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { uselogoutfun, userVerify } from "../../redux/slice/userAuthSlice/userAuthSlice";
+import { uselogoutfun, usercart, userVerify } from "../../redux/slice/userAuthSlice/userAuthSlice";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const userImg =
@@ -16,7 +16,9 @@ const Header = () => {
 
   const { UserLoggedIn } = useSelector((state) => state.User);
   const { loginuser } = useSelector((state) => state.User);
-
+  const { AddCart } = useSelector((state) => state.User);
+  const { userCartData } = useSelector((state) => state.User);
+  console.log("userCartData" ,userCartData)
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -25,6 +27,11 @@ const Header = () => {
   const userLoggedIn = () => {
     dispatch(userVerify());
   };
+
+  
+  const handleCartsDetails = ()=>{
+    dispatch(usercart());
+}
 
 
   const userlogouthandle = ()=>{
@@ -42,6 +49,10 @@ const Header = () => {
     userLoggedIn();
   }, []);
 
+
+  useEffect(()=>{
+    handleCartsDetails();
+},[AddCart ,loginuser])
   return (
     <>
       <header>
@@ -66,11 +77,11 @@ const Header = () => {
                 {/* <a href="/login">Sign in</a> */}
               </div>
               <div id="ex4" className="cartsicon">
-                <a href="/carts" className="text-dark">
-                  <span className="p1 fa-stack fa-2x has-badge" data-count={0}>
-                    <i className="p1 fa-solid fa-cart-shopping" />
-                  </span>
-                </a>
+              <NavLink to="/carts" className='text-dark'>
+                                    <span className='p1 fa-stack fa-2x has-badge' data-count={UserLoggedIn?.length > 0 ? userCartData?.length:"0"}>
+                                        <i class="p1 fa-solid fa-cart-shopping"></i>
+                                    </span>
+                                </NavLink>
               </div>
 
               <div className="profile">

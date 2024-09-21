@@ -1,9 +1,31 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Card } from "react-bootstrap"
 
 import './cartsmain.scss';
+import { useSelector } from 'react-redux';
 
 const CartsMain = () => {
+
+  const { userCartData } = useSelector((state) => state.User);
+  const [price, setPrice] = useState("");
+
+
+  const total = () => {
+    let totalprice = 0;
+
+    userCartData.map((ele, index) => {
+      totalprice = ele.productDetails?.price * ele?.quantity + totalprice;
+    });
+
+    setPrice(totalprice);
+  };
+
+
+
+  useEffect(() => {
+    total();
+  }, [total]);
+
   return (
     <>
       <Container className="pt-4 pb-4">
@@ -15,31 +37,32 @@ const CartsMain = () => {
 
             <Card className="card">
               <Card.Title>Cart items</Card.Title>
-              {/* {
-                userCart?.map((ele, ind) => {
-                  return (
-                    <> */}
-                      <div className={true ? "mt-2 store-item bottom-line pb-3" : "store-item mt-2"}>
+              {
+                userCartData.map((element , index)=>{
+                  return(
+                    <>
+
+<div className={true ? "mt-2 store-item bottom-line pb-3" : "store-item mt-2"}>
                         <Row>
                           <Col lg={3}>
-                            <img className="image-store" src='ele.productDetails?.productimage' alt="" />
+                            <img className="image-store" src={element.productDetails?.productimage} alt="" />
                           </Col>
                           <Col lg={9}>
                             <div className="mt-3 mt-lg-0 d-flex align-items-center justify-content-between">
-                              <h4>ele.productDetails?.productname</h4>
+                              <h4>{element.productDetails?.productname}</h4>
                               <div>
                                 <div className="btn-quantity-container d-flex align-items-center justify-content-center" style={{ gap: ".5rem" }}>
                                   <Button className="btn-quantity" variant="light" >&minus;</Button>
-                                  <span className="p-quantity">ele?.quantity</span>
+                                  <span className="p-quantity">{element.quantity}</span>
                                   <Button className="btn-quantity" variant="light" >+</Button>
                                 </div>
                               </div>
                             </div>
                             <div className="list-store d-flex align-items-center justify-content-between">
-                              <p>discount :- ele.productDetails?.discount%</p>
+                              <p>{element.productDetails?.discount}%</p>
                             </div>
                             <div className="list-store d-flex align-items-center justify-content-between">
-                              <p>Price :- ele.productDetails?.price</p>
+                    <p>Price :- {element.productDetails?.price} ₹</p>
                             </div>
                             <div className="list-store d-flex align-items-center justify-content-between">
                               <p>Delivery date :- dateAfter2Days</p>
@@ -56,17 +79,22 @@ const CartsMain = () => {
                                 </Button>
                               </div>
                               <div className="d-flex">
-                                <h5>Total :- ele.productDetails?.price * ele?.quantity</h5>
+                              Total :-{" "}
+                                  {element.productDetails?.price *
+                                    element?.quantity}
                               </div>
                             </div>
                           </Col>
                         </Row>
                       </div>
                       <hr />
-                    {/* </>
+                    </>
                   )
                 })
-              } */}
+              }
+             
+                    
+          
             </Card>
 
 
@@ -81,7 +109,7 @@ const CartsMain = () => {
                       <Col>
                         <div className="list-store d-flex align-items-center justify-content-between">
                           <p>Temporary amount</p>
-                          <p>totalprice</p>
+                          <p>{price}</p>
                         </div>
                         {/* <div className="list-store d-flex align-items-center justify-content-between">
                           <p>Shipping</p>
@@ -95,7 +123,7 @@ const CartsMain = () => {
                         <p className="p-total-label">The total amount of (Including VAT)</p>
                       </Col>
                       <Col className="col-6">
-                        <p className="p-total">totalprice</p>
+                        <p className="p-total">{price}</p>
                       </Col>
                     </Row>
                     <Row className="mt-1">
