@@ -8,13 +8,16 @@ import {
   removeItem,
   removeSingle,
 } from "../../redux/slice/userAuthSlice/userAuthSlice";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import EmptyCart from "../emptycart/EmptyCart";
+import moment from "moment";
 
 const CartsMain = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const { userCartData } = useSelector((state) => state.User);
+
   const [price, setPrice] = useState("");
 
   const total = () => {
@@ -26,6 +29,9 @@ const CartsMain = () => {
 
     setPrice(totalprice);
   };
+
+    // delivery date
+    const dateAfter2days = moment().add(2, "days").format("DD-MM-YYYY");
 
   // increment cart
   const handleIncrement = (e) => {
@@ -40,6 +46,11 @@ const CartsMain = () => {
    // remove item from cart
    const handleRemoveItems = (e) => {
     dispatch(removeItem(e));
+  };
+
+   // goto shiing page
+   const navigateShipping = () => {
+    navigate("/shipping", { state: price });
   };
 
 
@@ -119,7 +130,7 @@ const CartsMain = () => {
                         <p>Price :- {element.productDetails?.price} ₹</p>
                       </div>
                       <div className="list-store d-flex align-items-center justify-content-between">
-                        <p>Delivery date :- dateAfter2Days</p>
+                        <p>Delivery date :-  {dateAfter2days}</p>
                       </div>
                       <div className="list-store d-flex align-items-center justify-content-between">
                         <div className="d-flex gap-2">
@@ -195,6 +206,7 @@ const CartsMain = () => {
                       className="w-100"
                       variant="primary"
                       size="medium"
+                      onClick={navigateShipping}
                       block
                     >
                       Go To Checkout

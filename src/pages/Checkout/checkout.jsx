@@ -90,7 +90,7 @@ const Checkout = () => {
       </div>
       <div className='container mt-3 mb-2'>
 
-        <Button type="submit" onClick={handleSubmit}>Procee to payment</Button>
+        <Button type="submit"  onClick={handleSubmit}>Proceed to Pay</Button>
       </div>
     </>
   )
