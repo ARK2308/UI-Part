@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { forgotpasswordApi, forgotpasswordverifyApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
+import { DeleteuserApi, forgotpasswordApi, forgotpasswordverifyApi, getAlluserApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
 import { AddtoCartApi, GetUserCartApi, RemoveAllCartItemsApi, RemoveSingleCartItemsApi } from "../../../Api/cartApis/cartApi";
 
 
@@ -187,6 +187,7 @@ export const removeSingle = createAsyncThunk("removeSingle",async(data)=>{
     }
 });
 
+// remove item from cart 
 export const removeItem = createAsyncThunk("removeItem",async(data)=>{
     try {
         const response = await RemoveAllCartItemsApi(data);
@@ -197,6 +198,40 @@ export const removeItem = createAsyncThunk("removeItem",async(data)=>{
             return response.data
         }else{
             toast.error(response.response.data.error)
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+// getAlluser  Slice
+export const getAlluser = createAsyncThunk("getAlluser",async(data)=>{
+    try {
+        const response = await getAlluserApi(data);
+        
+
+        if(response.status == 200){
+            return response.data
+        }else{
+console.log("error")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+// deleteuser  Slice
+export const deleteuser = createAsyncThunk("deleteuser",async(data)=>{
+    try {
+        console.log("ddddddddd",data)
+        const response = await DeleteuserApi(data);
+        
+
+        if(response.status == 200){
+            toast.success("User delete Sucessfully")
+            return response.data
+        }else{
+            toast.error("Error")
         }
     } catch (error) {
         throw error;
@@ -233,6 +268,8 @@ export const UserSlice = createSlice({
         userCartData:[],
         removesingleCart:[],
         removeCart:[],
+        getAlluserData:[],
+        DeleteUser:[],
         loading:false,
         error:null
     },
@@ -390,6 +427,33 @@ export const UserSlice = createSlice({
             state.loading = false;
             state.error = action.payload;
         })
+
+           // getAlluser 
+           .addCase(getAlluser.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(getAlluser.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.getAlluserData = action.payload;
+        })
+        .addCase(getAlluser.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+          // deleteuser
+          .addCase(deleteuser.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(deleteuser.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.DeleteUser = [action.payload];
+        })
+        .addCase(deleteuser.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
 
 
     }

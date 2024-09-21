@@ -35,6 +35,17 @@ export const forgotpasswordverifyApi = async(data,header)=>{
 
 // resetpasswordApi api
 export const resetpasswordApi = async(data,header)=>{
-    return await commonrequest("PUT",`${BASE_URL}/userauth/api/resetpassword/${data.id}/${data.token}`,data.passworddata,header,"user");
+    return await commonrequest("PUT",`${BASE_URL}/userAuth/api/resetpassword/${data.id}/${data.token}`,data.passworddata,header,"user");
+}
+
+
+// getAlluserApi api
+export const getAlluserApi = async(data,header)=>{
+    return await commonrequest("GET",`${BASE_URL}/userAuth/api/getAlluser?page=${data.page}`,"",header,"admin");
+}
+
+// DeleteuserApi api
+export const DeleteuserApi = async(data,header)=>{
+    return await commonrequest("DELETE",`${BASE_URL}/userAuth/api/userdelete/${data.userid}`,{},header,"admin");
 }
 
