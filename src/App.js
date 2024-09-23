@@ -30,10 +30,19 @@ import Orders from './pages/Admin/Orders';
 import Error from './pages/Error/Error'
 import toast, { Toaster } from 'react-hot-toast';
 import Payment from './pages/payment/Payment';
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from '@stripe/stripe-js';
 
 function App() {
+
+
+  const stripePromise = loadStripe(
+    "pk_test_51Q24kKFEargFHgc5gxFCfyunRBCASQSJbEUDCON0QxdhM6P4TjagbiXuAJlYb55P84FbFsnHwTVG40Qo8lXeHO9200ynGT5QEe"
+  )
   return (
     <div className="App">
+
+      <Elements stripe={stripePromise}>
       
         <Routes>
           {/* Admin Routes */}
@@ -61,6 +70,7 @@ function App() {
           <Route path='*' element={<Layout><Error /></Layout>} />
         </Routes>
         <Toaster /> 
+        </Elements>
     </div>
   );
 }
