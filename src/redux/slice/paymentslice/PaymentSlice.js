@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from 'react-hot-toast';
 import { ProcessPaymentApi } from "../../../Api/PaymentApis/paymentapi";
+import { AddOrderApi } from "../../../Api/orderAPi/Orderapi";
 // import { AddOrderApi } from "../../../Api/orderAPi/Orderapi";
 
 
@@ -20,28 +21,29 @@ export const paymentProcess = createAsyncThunk("paymentProcess",async(data)=>{
 });
 
 // Order slice
-// export const Order = createAsyncThunk("Order",async(data)=>{
-//     try {
-//         const response = await AddOrderApi(data);
+export const Order = createAsyncThunk("Order",async(data)=>{
+    try {
+        const response = await AddOrderApi(data);
+        console.log("response",response)
 
-//         if(response.status == 200){
-//             toast.success("your payment sucessfully completed");
+        if(response.status === 200){
+            toast.success("your payment sucessfully completed");
 
-//             return response.data
-//         }else{
-//             toast.error(response.response.data.error);
-//         }
-//     } catch (error) {
-//         throw error;
-//     }
-// });
+            return response.data
+        }else{
+            toast.error(response.response.data.error);
+        }
+    } catch (error) {
+        throw error;
+    }
+});
 
 // create reducer and action
 export const PaymentSlice = createSlice({
     name:"PaymentSlice",
     initialState:{
         payment:[],
-        // ordersucess:[],
+        ordersucess:[],
         loading:false,
         error:null
     },
@@ -59,18 +61,18 @@ export const PaymentSlice = createSlice({
             state.error = action.payload;
         })
 
-        // Order
-        // .addCase(Order.pending,(state)=>{
-        //     state.loading = true;
-        // })
-        // .addCase(Order.fulfilled,(state,action)=>{
-        //     state.loading = false;
-        //     state.ordersucess = action.payload;
-        // })
-        // .addCase(Order.rejected,(state,action)=>{
-        //     state.loading = false;
-        //     state.error = action.payload;
-        // })
+      
+        .addCase(Order.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(Order.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.ordersucess = action.payload;
+        })
+        .addCase(Order.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
     
 
 
