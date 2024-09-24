@@ -49,3 +49,9 @@ export const DeleteuserApi = async(data,header)=>{
     return await commonrequest("DELETE",`${BASE_URL}/userAuth/api/userdelete/${data.userid}`,{},header,"admin");
 }
 
+// usercontactApi api
+export const usercontactApi = async(data,header)=>{
+    return await commonrequest("POST",`${BASE_URL}/userAuth/api/usercontact`,data,header,"user");
+}
+
+

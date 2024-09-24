@@ -1,7 +1,51 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Homecontact.scss';
+import { useDispatch } from 'react-redux';
+import toast from 'react-hot-toast';
+import { usercontact } from '../../redux/slice/userAuthSlice/userAuthSlice';
 
 const HomeContact = () => {
+
+    const [inputvalue, setInputvalue] = useState({
+        name: "",
+        email: "",
+        message: ""
+    });
+    const dispatch = useDispatch();
+
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setInputvalue({ ...inputvalue, [name]: value })
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const { name, email, message } = inputvalue;
+
+        if (name == "") {
+            toast.error("name is required")
+        } else if (email == "") {
+            toast.error("email is required")
+
+        } else if (!email.includes("@")) {
+            toast.error("enetre valid email")
+
+        } else if (message == "") {
+            toast.error("message is required")
+
+        } else {
+            dispatch(usercontact(inputvalue)).then((res)=>{
+                if(res?.payload){
+                    setInputvalue({...inputvalue,name:"",email:"",message:""})
+                }
+            }).catch((error)=>{
+                console.log("error",error)
+            })
+
+        }
+    }
   return (
     <>
     <section id="contact">
@@ -25,10 +69,16 @@ const HomeContact = () => {
                         <p>HW95+C9C, Lorem ipsum dolor sit.<br />411014</p>
                     </div>
                     <div className="form-details">
-                        <input type="text" name="name" id="name" value="" placeholder="Name" className='textinp' />
-                        <input type="email" name="email" id="email" value=""  placeholder="Email" className='emailinp'  />
-                        <textarea name="message" id="message" cols="52" rows="7" value="" placeholder="Message" className='textareainp' />
-                        <button>SEND MESSAGE</button>
+                    <input type="text" name="name" value={inputvalue.name}
+                                    onChange={handleChange}
+                                    placeholder='Name' className='textinp' id="" />
+                                <input type="email" name="email" value={inputvalue.email}
+                                    onChange={handleChange}
+                                    className='emailinp' placeholder='Email' id="" />
+                                <textarea name="message" id="" value={inputvalue.message}
+                                    onChange={handleChange}
+                                    cols="52" className='textareainp' rows="7" placeholder='Message'></textarea>
+                        <button onClick={handleSubmit} >SEND MESSAGE</button>
                     </div>
                 </div>
             </form>

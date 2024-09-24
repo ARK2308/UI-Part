@@ -6,6 +6,7 @@ import AdminUserTable from "./AdminUserTable";
 import { getAllProducts } from "../../redux/slice/product/ProductSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getAlluser } from "../../redux/slice/userAuthSlice/userAuthSlice";
+import { Ordersforadmin } from "../../redux/slice/adminAuthSlice/AdminSlice";
 // import { Ordersforadmin } from '../../redux/slice/adminAuthSlice/AdminSlice';
 // import { getAllHomeProducts, } from '../../redux/slice/productSlice/ProductSlice';
 // import AdminuserTable from "./AdminuserTable"
@@ -14,6 +15,7 @@ const AdminDashboard = () => {
   const { ProductsData } = useSelector((state) => state.Product);
   const { getAlluserData } = useSelector((state) => state.User);
   const {DeleteUser} = useSelector((state)=>state.User);
+  const { OrdersData } = useSelector((state) => state.Admin);
  
 
   const dispatch = useDispatch();
@@ -52,6 +54,10 @@ const AdminDashboard = () => {
     })
 }
 
+const getOrdersAdmin = () => {
+  dispatch(Ordersforadmin())
+}
+
     // pagination
     // handle next btn
     const handleNext = () => {
@@ -81,8 +87,8 @@ const AdminDashboard = () => {
       <div className="overview-boxes">
         <div className="box">
           <div className="right-side">
-            <div className="box-topic">50</div>
-            <div className="number">12</div>
+          <div className="box-topic">Total Order</div>
+          <div className="number">{OrdersData?.length}</div>
             <div className="indicator">
               <i className="bx bx-up-arrow-alt"></i>
               <span className="text">Up from yesterday</span>

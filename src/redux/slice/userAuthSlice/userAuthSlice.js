@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
-import { DeleteuserApi, forgotpasswordApi, forgotpasswordverifyApi, getAlluserApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
+import { DeleteuserApi, forgotpasswordApi, forgotpasswordverifyApi, getAlluserApi, loginApi, registerApi, resetpasswordApi, usercontactApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
 import { AddtoCartApi, DeletecartDataApi, GetUserCartApi, RemoveAllCartItemsApi, RemoveSingleCartItemsApi } from "../../../Api/cartApis/cartApi";
 import { userordersApi } from "../../../Api/orderAPi/Orderapi";
 
@@ -272,6 +272,27 @@ export const userorders = createAsyncThunk("userorders",async(thunkApi)=>{
     }
 });
 
+// usercontact  Slice
+export const usercontact = createAsyncThunk("usercontact",async(data)=>{
+    try {
+        
+        const response = await usercontactApi(data);
+        
+
+        if(response.status == 200){
+            toast.success("Your Message Save")
+
+            return response.data
+        }else{
+            toast.error(response.response.data.error)
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+
+
 
 
 
@@ -306,6 +327,7 @@ export const UserSlice = createSlice({
         DeleteUser:[],
         DeleteCartData:[],
         userOrderData:[],
+        userContactData:[],
         loading:false,
         error:null
     },
@@ -513,6 +535,19 @@ export const UserSlice = createSlice({
            
         })
         .addCase(userorders.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+           // usercontact Api
+           .addCase(usercontact.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(usercontact.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.userContactData = action.payload;
+           
+        })
+        .addCase(usercontact.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })
