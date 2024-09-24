@@ -21,3 +21,9 @@ export const RemoveSingleCartItemsApi = async(data,header)=>{
 export const RemoveAllCartItemsApi = async(data,header)=>{
     return await commonrequest("DELETE",`${BASE_URL}/carts/api/removeallitems/${data}`,{},header,"user");
 }
+
+// DeletecartDataApi api
+export const DeletecartDataApi = async(data,header)=>{
+    return await commonrequest("DELETE",`${BASE_URL}/carts/api/removecartdata`,{},header,"user");
+}
+

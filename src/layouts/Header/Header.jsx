@@ -20,7 +20,8 @@ const Header = () => {
   const { userCartData } = useSelector((state) => state.User);
   const { removesingleCart } = useSelector((state) => state.User);
   const { removeCart } = useSelector((state) => state.User);
-  console.log("userCartData" ,userCartData)
+  const { DeleteCartData } = useSelector((state) => state.User);
+  // console.log("userCartData" ,userCartData)
 
 
   const handleClose = () => setShow(false);
@@ -56,7 +57,7 @@ const Header = () => {
 
   useEffect(()=>{
     handleCartsDetails();
-},[AddCart ,loginuser , removesingleCart,removeCart])
+},[AddCart ,loginuser , removesingleCart,removeCart , DeleteCartData])
   return (
     <>
       <header>

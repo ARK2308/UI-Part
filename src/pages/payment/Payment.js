@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Order, paymentProcess } from "../../redux/slice/paymentslice/PaymentSlice";
 import toast from "react-hot-toast";
+import { Deletecartdata } from "../../redux/slice/userAuthSlice/userAuthSlice";
 
 const Payment = () => {
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ const Payment = () => {
       }
       dispatch(Order(order)).then((res) => {
         if (res?.payload) {
+          dispatch(Deletecartdata())
         
           navigate("/userorders")
         }

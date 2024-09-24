@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
 import { DeleteuserApi, forgotpasswordApi, forgotpasswordverifyApi, getAlluserApi, loginApi, registerApi, resetpasswordApi, userLoggedInApi, userLogoutApi } from "../../../Api/UserApis/userApi";
-import { AddtoCartApi, GetUserCartApi, RemoveAllCartItemsApi, RemoveSingleCartItemsApi } from "../../../Api/cartApis/cartApi";
+import { AddtoCartApi, DeletecartDataApi, GetUserCartApi, RemoveAllCartItemsApi, RemoveSingleCartItemsApi } from "../../../Api/cartApis/cartApi";
+import { userordersApi } from "../../../Api/orderAPi/Orderapi";
 
 
 
@@ -238,6 +239,39 @@ export const deleteuser = createAsyncThunk("deleteuser",async(data)=>{
     }
 });
 
+export const Deletecartdata = createAsyncThunk("Deletecartdata",async(thunkApi)=>{
+    try {
+        
+        const response = await DeletecartDataApi();
+        
+
+        if(response.status == 200){
+            return response.data
+        }else{
+            return thunkApi.rejecWithValue("error")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
+// userorders  Slice
+export const userorders = createAsyncThunk("userorders",async(thunkApi)=>{
+    try {
+        
+        const response = await userordersApi();
+        
+
+        if(response.status == 200){
+            return response.data
+        }else{
+            return thunkApi.rejecWithValue("error")
+        }
+    } catch (error) {
+        throw error;
+    }
+});
+
 
 
 
@@ -270,6 +304,8 @@ export const UserSlice = createSlice({
         removeCart:[],
         getAlluserData:[],
         DeleteUser:[],
+        DeleteCartData:[],
+        userOrderData:[],
         loading:false,
         error:null
     },
@@ -450,6 +486,33 @@ export const UserSlice = createSlice({
             state.DeleteUser = [action.payload];
         })
         .addCase(deleteuser.rejected,(state,action)=>{
+            state.loading = false;
+            state.error = action.payload;
+        })
+
+               // Deletecartdata Api
+               .addCase(Deletecartdata.pending,(state)=>{
+                state.loading = true;
+            })
+            .addCase(Deletecartdata.fulfilled,(state,action)=>{
+                state.loading = false;
+                state.DeleteCartData = action.payload;
+               
+            })
+            .addCase(Deletecartdata.rejected,(state,action)=>{
+                state.loading = false;
+                state.error = action.payload;
+            })
+               // userorders Api
+        .addCase(userorders.pending,(state)=>{
+            state.loading = true;
+        })
+        .addCase(userorders.fulfilled,(state,action)=>{
+            state.loading = false;
+            state.userOrderData = action.payload;
+           
+        })
+        .addCase(userorders.rejected,(state,action)=>{
             state.loading = false;
             state.error = action.payload;
         })

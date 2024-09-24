@@ -1,11 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./userprofile.scss";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userorders } from "../../redux/slice/userAuthSlice/userAuthSlice";
+import { useNavigate } from "react-router-dom";
 
 const UserProfile = () => {
   const { UserLoggedIn } = useSelector((state) => state.User);
+  const { userOrderData } = useSelector((state) => state.User);
+  console.log("fist",userOrderData)
 
-  const handleOrders = () => {};
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleOrders = () => {
+    navigate("/userorders");
+  };
+
+  const getOrdersdata = ()=>{
+    dispatch(userorders());
+}
+
+
+  useEffect(() => {
+    getOrdersdata()
+  },[]);
 
   return (
     <>
@@ -31,7 +49,7 @@ const UserProfile = () => {
             <div className="projects_data">
               <div className="data">
                 <h4>Total Orders</h4>
-                <p style={{ fontSize: "20px" }}>userOrders?.length</p>
+                <p style={{ fontSize: "20px" }}>{userOrderData?.length}</p>
               </div>
               <div className="data">
                 <button className="btn btn-primary" onClick={handleOrders}>
