@@ -139,6 +139,7 @@ const ProductDetailsMain = () => {
 
     setShowrating(Math.round(totalrating / ProductReview.length));
   }, [ProductReview]);
+  
 
   useEffect(() => {
     getProductsDetails();

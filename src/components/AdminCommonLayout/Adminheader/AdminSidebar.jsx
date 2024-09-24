@@ -50,8 +50,10 @@ const AdminSidebar = ({ children }) => {
       {/* <>  */}
       <div className={`sidebar ${isSidebarActive ? "active" : ""}`}>
         <div className="logo-details">
-          <i class="fa-solid fa-user"></i>
-          <span className="logo_name">{adminLoggedINData[0]?.name}</span>
+        <NavLink to="/" className="text-decoration-none">
+                        <i className='fa-solid fa-user'></i>
+                        <span className='logo_name'>{adminLoggedINData[0]?.name} Admin</span>
+                    </NavLink>
         </div>
         <ul className="nav-links">
           <li>

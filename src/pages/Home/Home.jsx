@@ -29,12 +29,26 @@ const Home = () => {
       dispatch(getLatestProducts());
   };
 
+  const [spin, setSpin] = useState(true);
+
+  
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setSpin(false);
+    }, 1000);
+  }, []);
+
     // product delete
     useEffect(() => {
       productApi();
     }, [page ] );
   return (
     <div>
+      
         <Homemain />
         <HomeProduct ProductsData={ProductsData.getAllProducts} LatestProducts={LatestProducts} />
         <HomeContact />
