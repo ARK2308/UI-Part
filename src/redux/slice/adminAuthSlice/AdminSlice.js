@@ -5,6 +5,7 @@ import {
   AdminLogoutApi,
 } from "../../../Api/AdminApis/adminapi";
 import { toast } from "react-hot-toast";
+import { GetOrdersApi, OrdersUpdatestatusApi } from "../../../Api/orderAPi/Orderapi";
 
 export const AdminAuthLogin = createAsyncThunk("AdminLogin", async (data) => {
   try {
@@ -59,6 +60,37 @@ export const AdminLogout = createAsyncThunk("AdminLogout", async (thunkApi) => {
   }
 });
 
+// Ordersforadmin Slice
+export const Ordersforadmin = createAsyncThunk("Ordersforadmin",async(thunkApi)=>{
+  try {
+      const response = await GetOrdersApi();
+      
+      if(response.status == 200){
+          return response.data
+      }else{
+          return thunkApi.rejectWithValue("error");
+      }
+  } catch (error) {
+      throw error;
+  }
+})
+// OrderUpdateStatus Slice
+export const OrderUpdateStatus = createAsyncThunk("OrderUpdateStatus",async(data)=>{
+  try {
+      const response = await OrdersUpdatestatusApi(data);
+      
+      if(response.status == 200){
+          toast.success("Order Status Updated")
+          return response.data
+      }else{
+          toast.error(response.response.data.error)
+
+      }
+  } catch (error) {
+      throw error;
+  }
+})
+
 // crreate reducer and action
 export const AdminSlice = createSlice({
   name: "AdminSlice",
@@ -66,6 +98,8 @@ export const AdminSlice = createSlice({
     adminlogin: [],
     adminLoggedINData: [],
     adminLogoutData: [],
+    OrdersData:[],
+    OrdersStatusChange:[],
     loading: false,
     error: null,
   },
@@ -108,8 +142,38 @@ export const AdminSlice = createSlice({
       .addCase(AdminLogout.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
+
+       // Ordersforadmin
+       .addCase(Ordersforadmin.pending,(state)=>{
+        state.loading = true;
+    })
+    .addCase(Ordersforadmin.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.OrdersData = action.payload;
+    })
+    .addCase(Ordersforadmin.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+    })
+
+      // OrderUpdateStatus
+      .addCase(OrderUpdateStatus.pending,(state)=>{
+        state.loading = true;
+    })
+    .addCase(OrderUpdateStatus.fulfilled,(state,action)=>{
+        state.loading = false;
+        state.OrdersStatusChange = [action.payload];
+    })
+    .addCase(OrderUpdateStatus.rejected,(state,action)=>{
+        state.loading = false;
+        state.error = action.payload;
+    })
   },
 });
+
+
+
+
 
 export default AdminSlice.reducer;

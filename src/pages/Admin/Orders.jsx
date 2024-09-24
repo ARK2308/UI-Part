@@ -1,15 +1,26 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 import Table from 'react-bootstrap/Table';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Badge from 'react-bootstrap/Badge';
-import { NavLink } from 'react-router-dom';
-import "./order.scss"
-// import { OrderUpdateStatus, Ordersforadmin } from '../../redux/slice/adminAuthSlice/AdminSlice';
-// import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { Ordersforadmin } from '../../redux/slice/adminAuthSlice/AdminSlice';
+import "./order.scss";
 
 const Orders = () => {
+  const dispatch = useDispatch();
+  const { OrdersData } = useSelector((state) => state.Admin);
+
+  
+
+  const getOrdersAdmin = () => {
+    dispatch(Ordersforadmin());
+  };
+
+  useEffect(() => {
+    getOrdersAdmin();
+  }, []);
 
   return (
     <>
@@ -17,81 +28,65 @@ const Orders = () => {
         <h3>Orders</h3>
         <Row>
           <div className="col mt-0">
-            <Card className='shadow'>
-              <Table className='align-items-center' responsive="sm">
-                <thead className='thead-dark'>
-                  <tr className='table-dark'>
+            <Card className="shadow">
+              <Table className="align-items-center" responsive="sm">
+                <thead className="thead-dark">
+                  <tr className="table-dark">
                     <th>ID</th>
-                    <th>totalPrice</th>
-                    <th>orderItems</th>
-                    <th>userId</th>
-                    <th>&nbsp;&nbsp;&nbsp;Status</th>
-                    <th>action</th>
+                    <th>Total Price</th>
+                    <th>Order Items</th>
+                    <th>User ID</th>
+                    <th>Status</th>
+                    <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
-
-                  <tr>
-                    <td></td>
-                    <td>₹ &nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td>
-
-                      <Dropdown className=''>
-                        <Dropdown.Toggle id="dropdown-basic">
-
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item >Confirm</Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-
-                      <Dropdown className=''>
-                        <Dropdown.Toggle id="dropdown-basic">
-
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item >Shipped</Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-
-                      <Dropdown className=''>
-                        <Dropdown.Toggle id="dropdown-basic">
-
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                          <Dropdown.Item >Delivered</Dropdown.Item>
-                        </Dropdown.Menu>
-                      </Dropdown>
-
-
-
-                    </td>
-
-
-                    <td>
-                      <div>
-                        <i class="fa-solid fa-trash" style={{ color: "red" }}></i>
-                      </div>
-                    </td>
-                  </tr>
-
-
-                  <div className='no_data text-center'>NO Data Found</div>
-
-
-
+                  {OrdersData.length > 0 ? (
+                    OrdersData.map((element, index) => {
+                      return (
+                        <tr key={index}>
+                          <td>{element._id}</td>
+                          <td>{element.totalPrice}</td>
+                          <td>{element.orderItems.join(', ')}</td>
+                          <td>{element.userId}</td>
+                          <td>
+                            <Badge bg="success">Confirmed</Badge>
+                          </td>
+                          <td>
+                            <Dropdown>
+                              <Dropdown.Toggle id="dropdown-basic">
+                                Update Status
+                              </Dropdown.Toggle>
+                              <Dropdown.Menu>
+                                <Dropdown.Item>Confirm</Dropdown.Item>
+                                <Dropdown.Item>Shipped</Dropdown.Item>
+                                <Dropdown.Item>Delivered</Dropdown.Item>
+                              </Dropdown.Menu>
+                            </Dropdown>
+                          </td>
+                          <td>
+                            <div>
+                              <i className="fa-solid fa-trash" style={{ color: "red" }}></i>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan="6" className="text-center">
+                        No Data Found
+                      </td>
+                    </tr>
+                  )}
                 </tbody>
               </Table>
-
             </Card>
           </div>
         </Row>
-
       </div>
     </>
-  )
-}
+  );
+};
 
-export default Orders
+export default Orders;
