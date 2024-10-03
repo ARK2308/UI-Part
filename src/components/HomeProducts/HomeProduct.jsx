@@ -14,8 +14,8 @@ const HomeProduct = ({ProductsData , LatestProducts}) => {
                     ProductsData.slice(0, 4).map((element, index) => {
                         return (
                             <>
-                                <div className="best-p1">
-                                    <img src={element.productimage} alt="" />
+                                <div style={{border:"1px solid white"}} className="best-p1 " >
+                                    <img src={element.productimage} style={{height:"250px",width:"246px" , border:"1px solid grey"}} alt="" />
                                     <div className="best-p1-txt">
                                         <div className="name-of-p">
                                             <p>{element.productname}</p>
@@ -48,8 +48,8 @@ const HomeProduct = ({ProductsData , LatestProducts}) => {
                     LatestProducts?.slice(0, 4)?.map((element, index) => {
                         return (
                             <>
-                                <div className="best-p1">
-                                    <img src={element.productimage} alt="" />
+                                <div style={{border:"1px solid white"}}  className="best-p1">
+                                    <img src={element.productimage} style={{height:"250px",width:"246px" , border:"1px solid grey"}} alt="" />
                                     <div className="best-p1-txt">
                                         <div className="name-of-p">
                                             <p>{element.productname}</p>

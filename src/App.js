@@ -72,15 +72,16 @@ function App() {
               }
             />
             <Route
-              path="/admin/addproducts"
+              path="/admin/addcategory"
               element={
                 <AdminCommonLayout>
                   <AdminProtectedRoutes Components={AddCategory} />
                 </AdminCommonLayout>
               }
+              
             />
             <Route
-              path="/admin/addcategory"
+              path="/admin/addproducts"
               element={
                 <AdminCommonLayout>
                   <AdminProtectedRoutes Components={AddProducts} />

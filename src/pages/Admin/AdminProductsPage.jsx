@@ -74,7 +74,7 @@ const AdminProductspage = () => {
               return (
                 <>
                   <div className="best-p1 mb-5">
-                    <img src={element.productimage} width="100%" alt="" />
+                    <img  src={element.productimage} style={{height:"260px",width:"246px" , border:"1px solid grey"}}  alt="" />
                     <div className="best-p1-txt">
                       <div className="name-of-p">
                         <p>{element.productname}</p>

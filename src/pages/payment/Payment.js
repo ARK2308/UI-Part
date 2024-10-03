@@ -79,7 +79,9 @@ const Payment = () => {
   useEffect(() => {
     if (payment.length > 0) {
       finalpayment()
+      
     }
+  
   }, [payment])
 
   return (

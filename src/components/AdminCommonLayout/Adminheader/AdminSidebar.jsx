@@ -56,12 +56,12 @@ const AdminSidebar = ({ children }) => {
                     </NavLink>
         </div>
         <ul className="nav-links">
-          <li>
-            <NavLink to="/admin/dashboard" className="active">
-              <i className="bx bx-grid-alt"></i>
-              <span className="links_name">Dashboard</span>
-            </NavLink>
-          </li>
+        <li>
+                        <NavLink to="/admin/dashboard" className="active">
+                            <i className='bx bx-grid-alt'></i>
+                            <span className='links_name'>Dashboard</span>
+                        </NavLink>
+                    </li>
           <li>
             <NavLink to="/admin/addproducts">
               <i class="fa-solid fa-truck-fast"></i>
